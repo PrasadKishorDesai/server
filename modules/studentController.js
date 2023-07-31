@@ -3,15 +3,23 @@ const util = require('util');
 const query = util.promisify(db.query).bind(db);
 
 let getAllStudents = async (req, res) => {
-    const sqlQuery = "SELECT * FROM students";
-
+    let currentPage = req.query.page || 1;
+    const perPage = 2;
+    let totalData;
     try {
-        const result = await query(sqlQuery);
-        // console.log(result);
+        const sqlQuery = "SELECT * FROM students";
+        let result = await query(sqlQuery);
+        totalData = result.length;
+        
+        const sqlQueryFetch = `SELECT * FROM students LIMIT ${perPage} OFFSET ${(currentPage-1)*perPage}`;
+        result = await query(sqlQueryFetch);
+
+        res.setHeader("Content-type", "application/json")
         res.status(200).send({
             success: true,
             message: "Students data fetched successfully",
-            data: result
+            data: result,
+            totalData: totalData
         })
     } catch (error) {
         res.status(500).send({
