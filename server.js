@@ -3,9 +3,8 @@ const cors = require('cors')
 
 const app = express();
 
-const studentRoutes = require('./modules/studentRoutes');
-const login = require('./modules/auth/Login');
-const signup = require('./modules/auth/Signup');
+const studentRoutes = require('./routes/studentRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 app.use(cors());
 app.use(express.json());
@@ -18,19 +17,9 @@ app.get("/message", (req, res) => {
 
 app.use('/api', studentRoutes);
 
-app.use('/api/auth/login', login);
-app.use('/api/auth/signup', signup);
+app.use('/auth', authRoutes);
 
 app.listen(8000, () => {
     console.log("Server is running on port 8000");
 });
 
-
-/*
-tasks to do 11/07
-api/auth/login
-api/auth/signup
-express validator
-
-
-*/

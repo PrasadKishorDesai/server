@@ -33,7 +33,7 @@ let getAllStudents = async (req, res) => {
 let getStudentById = async (req, res) => {
     try {
         const id = req.params.id;
-        const sqlQuery = "SELECT * FROM students WHERE id = ?";
+        const sqlQuery = "SELECT * FROM students WHERE student_id = ?";
         const result = await query(sqlQuery, [id]);
         res.status(200).send({
             success: true,
@@ -53,16 +53,25 @@ let getStudentById = async (req, res) => {
 let addStudent = async (req, res) => {
     try {
         let values = req.body;
+        let userId = req.userId;
+        // console.log(req.userId);
+        values = {...values, creator: userId};
         const sqlQuery = "INSERT INTO students SET ?";
         let result = await query(sqlQuery, [values]);
 
-        const sqlQueryFetch = "SELECT * FROM students WHERE Id = ?";
+        const sqlQueryFetch = "SELECT * FROM students WHERE student_id = ?";
         let resultFetch = await query(sqlQueryFetch, [result.insertId]);
+        
+        const sqlQueryUserFetch = "SELECT * FROM admin WHERE user_id = ?";
+        let userResultFetch = await query(sqlQueryUserFetch, [userId]);
+        // console.log(userResultFetch[0].name)
+        let user = userResultFetch[0];
 
         res.status(201).send({
             success: true,
             message: "Student data inserted successfully",
-            data: resultFetch[0]
+            data: resultFetch[0],
+            creator: {_id: userId, name: user.name}
         })
 
     } catch (error) {
@@ -78,10 +87,10 @@ let updateStudentById = async (req, res) => {
     try {
         let values = req.body;
         let id = req.params.id;
-        const sqlQuery = "UPDATE students SET ? WHERE id = ?";
+        const sqlQuery = "UPDATE students SET ? WHERE student_id = ?";
         let result = await query(sqlQuery, [values, id]);
 
-        const sqlQueryFetch = "SELECT * FROM students WHERE id = ?";
+        const sqlQueryFetch = "SELECT * FROM students WHERE student_id = ?";
         let resultFetch = await query(sqlQueryFetch, [id]);
 
         res.status(201).send({
@@ -102,7 +111,7 @@ let updateStudentById = async (req, res) => {
 let deleteStudentById = async (req, res) => {
     try {
         let id = req.params.id;
-        const sqlQuery = "DELETE FROM students WHERE id = ?";
+        const sqlQuery = "DELETE FROM students WHERE student_id = ?";
         let result = await query(sqlQuery, [id]);
 
         res.status(204).send({
