@@ -87,11 +87,33 @@ let updateStudentById = async (req, res) => {
     try {
         let values = req.body;
         let id = req.params.id;
+        
+        let sqlQueryFetch = "SELECT * FROM students WHERE student_id = ?";
+        let resultFetch = await query(sqlQueryFetch, [id]);
+
+        if (resultFetch[0].length === 0) {
+            res.status(404).send({
+                success: false,
+                message: "Student data not found",
+                data: []
+            })
+            return;
+        }
+
+        if (resultFetch[0].creator.toString() !== req.userId.toString()) {
+            res.status(403).send({
+                success: false,
+                message: "Not authorized",
+                data: []
+            })
+            return;
+        }
+
         const sqlQuery = "UPDATE students SET ? WHERE student_id = ?";
         let result = await query(sqlQuery, [values, id]);
 
-        const sqlQueryFetch = "SELECT * FROM students WHERE student_id = ?";
-        let resultFetch = await query(sqlQueryFetch, [id]);
+        sqlQueryFetch = "SELECT * FROM students WHERE student_id = ?";
+        resultFetch = await query(sqlQueryFetch, [id]);
 
         res.status(201).send({
             success: true,
@@ -111,6 +133,28 @@ let updateStudentById = async (req, res) => {
 let deleteStudentById = async (req, res) => {
     try {
         let id = req.params.id;
+        
+        let sqlQueryFetch = "SELECT * FROM students WHERE student_id = ?";
+        let resultFetch = await query(sqlQueryFetch, [id]);
+
+        if (resultFetch[0].length === 0) {
+            res.status(404).send({
+                success: false,
+                message: "Student data not found",
+                data: []
+            })
+            return;
+        }
+
+        if (resultFetch[0].creator.toString() !== req.userId.toString()) {
+            res.status(403).send({
+                success: false,
+                message: "Not authorized",
+                data: []
+            })
+            return;
+        }
+
         const sqlQuery = "DELETE FROM students WHERE student_id = ?";
         let result = await query(sqlQuery, [id]);
 
