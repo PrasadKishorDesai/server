@@ -1,5 +1,6 @@
 const express = require('express')
 const cors = require('cors')
+require('dotenv').config()
 
 const app = express();
 
@@ -19,7 +20,7 @@ app.use('/api', studentRoutes);
 
 app.use('/auth', authRoutes);
 
-app.listen(8000, () => {
+app.listen(process.env.PORT, () => {
     console.log("Server is running on port 8000");
 });
 
