@@ -1,0 +1,11 @@
+{
+    "dev": {
+        "host": "localhost",
+        "user": "docker_user",
+        "password": "password",
+        "database": "students_docker_db",
+        "driver": "mysql",
+        "multipleStatements": true
+    },
+    "sql-file": true
+}
