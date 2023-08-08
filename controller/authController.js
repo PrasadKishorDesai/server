@@ -1,38 +1,31 @@
-const db = require('../database/mysql');
-const util = require('util');
-const query = util.promisify(db.query).bind(db);
-
 const { validationResult } = require("express-validator");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { successHandler } = require("../helpers/successHandler");
+const { queryHandler } = require("../helpers/queryHandler");
 
 const login = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.setHeader("Content-Type", "application/json");
-            res.status(400).send({
-                success: false,
-                message: "Bad input",
-                data: errors.array()
-            })
-            return;
+            let err = new Error("Bad input");
+            err.statusCode = 400;
+            err.data = errors.array();
+            throw err;
         }
         let email = req.body.email;
         let password = req.body.password;
 
         const sqlQueryCheck = "SELECT * FROM admin WHERE email = ?";
-        let resultCheck = await query(sqlQueryCheck, [email]);
+        // let resultCheck = await query(sqlQueryCheck, [email]);
+        let resultCheck = await queryHandler(sqlQueryCheck, [email]);
 
         // console.log(resultCheck);
         if (resultCheck.length === 0) {
-            res.setHeader("Content-Type", "application/json");
-            res.status(400).send({
-                success: false,
-                message: "Email does not exists",
-                data: resultCheck
-            })
-            return;
+            let err = new Error("Email does not exists");
+            err.statusCode = 404;
+            err.data = resultCheck;
+            throw err;
         }
 
         // console.log(resultCheck[0].password)
@@ -40,16 +33,13 @@ const login = async (req, res, next) => {
         // console.log(result)
 
         if (!isEqual) {
-            res.setHeader("Content-Type", "application/json");
-            res.status(400).send({
-                success: false,
-                message: "Password did not match",
-                data: []
-            })
-            return;
+            let err = new Error("Password did not match");
+            err.statusCode = 400;
+            err.data = [];
+            throw err;
         }
 
-        const data = resultCheck[0];
+        let data = resultCheck[0];
         const token = jwt.sign(
             {
                 email: data.email,
@@ -60,20 +50,15 @@ const login = async (req, res, next) => {
             { expiresIn: '1h' }
         );
         // console.log(token);
-
-        res.status(200).send({
-            success: true,
-            message: "User Verified Successfully",
-            data: resultCheck[0],
-            token: token
-        })
+        
+        data = {records:resultCheck[0], token};
+        successHandler(res, 200, "User Verified Successfully", data);
 
     } catch (error) {
-        res.status(500).send({
-            success: false,
-            message: "Connecting issue with mysql",
-            data: error.message
-        })
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+        next(error);
     }
 }
 
@@ -81,52 +66,45 @@ const signup = async (req, res, next) => {
     try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            res.setHeader("Content-Type", "application/json");
-            res.status(400).send({
-                success: false,
-                message: "Bad input",
-                data: errors.array()[0]
-            })
-            return;
+            let err = new Error("Bad input");
+            err.statusCode = 400;
+            err.data = errors.array()[0];
+            throw err;
         }
         let name = req.body.name;
         let email = req.body.email;
         let password = req.body.password;
 
         const sqlQueryCheck = "SELECT * FROM admin WHERE email = ?";
-        let resultCheck = await query(sqlQueryCheck, [email]);
+        let resultCheck = await queryHandler(sqlQueryCheck, [email]);
 
         // console.log(resultCheck.length);
         if (resultCheck.length !== 0) {
-            res.setHeader("Content-Type", "application/json");
-            res.status(400).send({
-                success: false,
-                message: "Email already exists",
-                data: resultCheck
-            })
-            return;
+            let err = new Error("Email already exists");
+            err.statusCode = 400;
+            err.data = resultCheck;
+            throw err;
         }
 
         let hashPwd = await bcrypt.hash(password, 7);
 
         const sqlQuery = "INSERT INTO admin SET ?";
         const values = { email, name, password: hashPwd };
-        let result = await query(sqlQuery, [values]);
+        // let result = await query(sqlQuery, [values]);
+        let result = await queryHandler(sqlQuery, values);
 
         const sqlQueryFetch = "SELECT * FROM admin WHERE user_id = ?";
-        let resultFetch = await query(sqlQueryFetch, [result.insertId]);
-        res.status(201).send({
-            success: true,
-            message: "User Created Successfully",
-            data: resultFetch[0]
-        })
+        // let resultFetch = await query(sqlQueryFetch, [result.insertId]);
+        let resultFetch = await queryHandler(sqlQueryFetch, [result.insertId]);
+        
+        data = {records:resultFetch[0]};
+        successHandler(res, 201, "User Created Successfully", data);
 
     } catch (error) {
-        res.status(500).send({
-            success: false,
-            message: "Connecting issue with mysql",
-            data: error.message
-        })
+        if (!error.statusCode) {
+            error.statusCode = 500;
+        }
+        next(error);
     }
 }
 
