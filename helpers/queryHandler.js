@@ -1,4 +1,4 @@
-const db = require('../database/mysql');
+const db = require('../src/helpers/database');
 const util = require('util');
 const query = util.promisify(db.query).bind(db);
 

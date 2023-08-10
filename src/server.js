@@ -4,10 +4,10 @@ require('dotenv').config()
 
 const app = express();
 
-const studentRoutes = require('./routes/studentRoutes');
-const authRoutes = require('./routes/authRoutes');
-const { errorHandler } = require('./helpers/errorHandler');
-const { successHandler } = require('./helpers/successHandler');
+const studentRoutes = require('../routes/studentRoutes');
+const authRoutes = require('../routes/authRoutes');
+const { errorHandler } = require('../helpers/errorHandler');
+const { successHandler } = require('../helpers/successHandler');
 
 app.use(cors());
 app.use(express.json());
