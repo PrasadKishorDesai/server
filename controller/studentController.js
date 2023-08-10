@@ -1,7 +1,7 @@
 const { queryHandler } = require("../helpers/queryHandler");
 const { successHandler } = require("../helpers/successHandler");
 
-let getAllStudents = async (req, res) => {
+let getAllStudents = async (req, res, next) => {
     let currentPage = req.query.page || 1;
     const perPage = 2;
     let totalData;
@@ -48,7 +48,7 @@ let getStudentById = async (req, res, next) => {
     }
 };
 
-let addStudent = async (req, res) => {
+let addStudent = async (req, res, next) => {
     try {
         let values = req.body;
         let userId = req.userId;
@@ -74,7 +74,7 @@ let addStudent = async (req, res) => {
     }
 };
 
-let updateStudentById = async (req, res) => {
+let updateStudentById = async (req, res, next) => {
     try {
         let values = req.body;
         let id = req.params.id;
@@ -113,7 +113,7 @@ let updateStudentById = async (req, res) => {
     }
 };
 
-let deleteStudentById = async (req, res) => {
+let deleteStudentById = async (req, res, next) => {
     try {
         let id = req.params.id;
         

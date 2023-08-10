@@ -1,11 +1,12 @@
 {
     "dev": {
-        "host": "localhost",
-        "user": "docker_user",
-        "password": "password",
-        "database": "students_docker_db",
+        "host": { "ENV" : "MYSQLDB_HOST" },
+        "user": { "ENV" : "MYSQLDB_USER" },
+        "password": { "ENV" : "MYSQLDB_PASSWORD" },
+        "database": { "ENV" : "MYSQLDB_DATABASE" },
         "driver": "mysql",
-        "multipleStatements": true
+        "multipleStatements": true,
+        "port": { "ENV" : "MYSQLDB_LOCAL_PORT" }
     },
     "sql-file": true
 }

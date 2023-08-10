@@ -1,19 +1,5 @@
 version: '3.8'
 services:
-  my-sql:
-    image: mysql:8.0
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    container_name: my-sql
-    environment:
-      MYSQL_DATABASE: ${MYSQLDB_DATABASE}
-      MYSQL_USER: ${MYSQLDB_USER}
-      MYSQL_PASSWORD: ${MYSQLDB_PASSWORD}
-    ports:
-      - '${MYSQLDB_LOCAL_PORT}:${MYSQLDB_DOCKER_PORT}'
-    volumes:
-      - ./.docker/mysql:/var/lib/mysql
-
   node-api:
     build:
       context: .
@@ -23,8 +9,6 @@ services:
     restart: always
     ports:
       - ${NODE_LOCAL_PORT}:${NODE_DOCKER_PORT}
-    depends_on:
-      - my-sql
     environment:
       - DB_HOST=${MYSQLDB_HOST}
       - DB_USER=${MYSQLDB_USER}
