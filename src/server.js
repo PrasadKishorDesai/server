@@ -1,6 +1,6 @@
-const express = require('express')
-const cors = require('cors')
-require('dotenv').config()
+const express = require('express');
+const cors = require('cors');
+require('dotenv').config();
 
 const app = express();
 const studentRoutes = require('./api/v1.0/modules/student/routes');
@@ -12,7 +12,7 @@ const { logger, pinoHttpLogger } = require('./helpers/logger');
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(pinoHttpLogger)
+app.use(pinoHttpLogger);
 
 app.use((error, req, res, next) => {
     errorHandler(error, req, res);
@@ -39,16 +39,16 @@ process.on('uncaughtException', (err) => {
 });
 
 process.on('SIGTERM', signal => {
-    console.log(`Process ${process.pid} received a SIGTERM signal`)
-    process.exit(0)
+    console.log(`Process ${process.pid} received a SIGTERM signal`);
+    process.exit(0);
 });
 
 process.on('SIGINT', signal => {
-    console.log(`Process ${process.pid} has been interrupted`)
-    process.exit(0)
+    console.log(`Process ${process.pid} has been interrupted`);
+    process.exit(0);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
-    console.log('Unhandled rejection at ', promise, `reason: ${err.message}`)
-    process.exit(1)
+    console.log('Unhandled rejection at ', promise, `reason: ${err.message}`);
+    process.exit(1);
 });

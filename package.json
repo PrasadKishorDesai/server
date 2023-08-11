@@ -29,6 +29,8 @@
   },
   "devDependencies": {
     "db-migrate": "^0.11.13",
-    "db-migrate-mysql": "^2.2.0"
+    "db-migrate-mysql": "^2.2.0",
+    "eslint": "^8.46.0",
+    "eslint-config-google": "^0.14.0"
   }
 }
