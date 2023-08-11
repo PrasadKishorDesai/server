@@ -15,6 +15,7 @@ const levels = {
 
 const projRootPath = rootPath();
 const loggerPath = path.join(projRootPath, 'logs');
+const todayDate = new Date().toJSON().slice(0,10);
 
 fs.mkdir(loggerPath, { recursive: true }, (err) => {
     if (err) {
@@ -24,7 +25,7 @@ fs.mkdir(loggerPath, { recursive: true }, (err) => {
 
 const fileTransport = pino.transport({
     target: 'pino/file',
-    options: { destination: `${loggerPath}/app.log` },
+    options: { destination: `${loggerPath}/${todayDate}.log` },
 });
 
 const logger = pino({
