@@ -1,4 +1,6 @@
 var mysql = require('mysql2');
+const logger = require('./logger');
+
 var connection = mysql.createConnection({
   host: process.env.MYSQLDB_HOST,
   user: process.env.MYSQLDB_USER,
@@ -12,12 +14,14 @@ var connection = mysql.createConnection({
 connection.connect((err) => {
   try {
     if (err) {
-      console.log("Error connecting to database \n", err);
       err.statusCode = 500;
+      logger.error(err, "Error connecting to database");
       throw err;
     }
-    else
+    else  {
       console.log("Successfully connected to database");
+      logger.info("Successfully connected to database");
+    }
 
   } catch (error) {
     if (!error.statusCode) {

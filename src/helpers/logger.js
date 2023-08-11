@@ -1,6 +1,67 @@
-const logger = require('pino')()
+const pino = require('pino');
+const pinoHttp = require('pino-http');
+const fs = require('fs');
+const path = require('path');
+const rootPath = require('./rootPath');
 
-logger.info('hello world')
+const levels = {
+    fatal: 60,
+    error: 50,
+    warn: 40,
+    info: 30,
+    debug: 20,
+    trace: 10
+};
 
-const child = logger.child({ a: 'property' })
-child.info('hello child!')
+const projRootPath = rootPath();
+const loggerPath = path.join(projRootPath, 'logs');
+
+fs.mkdir(loggerPath, { recursive: true }, (err) => {
+    if (err) {
+        throw err;
+    }
+});
+
+const fileTransport = pino.transport({
+    target: 'pino/file',
+    options: { destination: `${loggerPath}/app.log` },
+});
+
+const logger = pino({
+    level: 'trace',
+    timestamp: () => `,"time":"${new Date(new Date(Date.now()).toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))}"`,
+    base: undefined,
+    customLevels: levels,
+    useOnlyCustomLevels: true,
+    formatters: {
+        level: (label) => {
+            return { level: label.toUpperCase() };
+        }
+    },
+}, fileTransport);
+
+const pinoHttpLogger = pinoHttp({
+    logger: logger,
+    serializers: {
+        err: pino.stdSerializers.err,
+        req: pino.stdSerializers.req,
+        res: pino.stdSerializers.res
+    },
+    wrapSerializers: true,
+    customLogLevel: function (req, res, err) {
+        if (res.statusCode >= 400 && res.statusCode < 500) {
+            return 'warn'
+        } else if (res.statusCode >= 500 || err) {
+            return 'error'
+        } else if (res.statusCode >= 300 && res.statusCode < 400) {
+            return 'silent'
+        }
+        return 'info'
+    },
+
+}, fileTransport);
+
+module.exports = {
+    logger,
+    pinoHttpLogger
+};
