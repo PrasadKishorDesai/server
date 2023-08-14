@@ -1,8 +1,8 @@
-const pino = require('pino');
-const pinoHttp = require('pino-http');
-const fs = require('fs');
-const path = require('path');
-const rootPath = require('./rootPath');
+const pino = require("pino");
+const pinoHttp = require("pino-http");
+const fs = require("fs");
+const path = require("path");
+const rootPath = require("./rootPath");
 
 const levels = {
     fatal: 60,
@@ -14,7 +14,7 @@ const levels = {
 };
 
 const projRootPath = rootPath();
-const loggerPath = path.join(projRootPath, 'logs');
+const loggerPath = path.join(projRootPath, "logs");
 const todayDate = new Date().toJSON().slice(0,10);
 
 fs.mkdir(loggerPath, { recursive: true }, (err) => {
@@ -24,12 +24,12 @@ fs.mkdir(loggerPath, { recursive: true }, (err) => {
 });
 
 const fileTransport = pino.transport({
-    target: 'pino/file',
+    target: "pino/file",
     options: { destination: `${loggerPath}/${todayDate}.log` },
 });
 
 const logger = pino({
-    level: 'trace',
+    level: "trace",
     timestamp: () => `,"time":"${new Date(new Date(Date.now()).toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))}"`,
     base: undefined,
     customLevels: levels,
@@ -51,13 +51,13 @@ const pinoHttpLogger = pinoHttp({
     wrapSerializers: true,
     customLogLevel: function (req, res, err) {
         if (res.statusCode >= 400 && res.statusCode < 500) {
-            return 'warn'
+            return "warn";
         } else if (res.statusCode >= 500 || err) {
-            return 'error'
+            return "error";
         } else if (res.statusCode >= 300 && res.statusCode < 400) {
-            return 'silent'
+            return "silent";
         }
-        return 'info'
+        return "info";
     },
 
 }, fileTransport);

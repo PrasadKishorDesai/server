@@ -1,5 +1,5 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const { successHandler } = require("../../../../../helpers/successHandler");
 const { queryHandler } = require("../../../../../helpers/queryHandler");
 
@@ -34,8 +34,8 @@ const login = async (req, res, next) => {
                 name: data.name,
                 user_id: data.user_id.toString()
             },
-            'mySuperSecretKey',
-            { expiresIn: '1h' }
+            "mySuperSecretKey",
+            { expiresIn: "1h" }
         );
         
         data = {records:resultCheck[0], token};
@@ -47,7 +47,7 @@ const login = async (req, res, next) => {
         }
         next(error);
     }
-}
+};
 
 const signup = async (req, res, next) => {
     try {
@@ -74,7 +74,7 @@ const signup = async (req, res, next) => {
         const sqlQueryFetch = "SELECT * FROM admin WHERE user_id = ?";
         let resultFetch = await queryHandler(sqlQueryFetch, [result.insertId]);
         
-        data = {records:resultFetch[0]};
+        let data = {records:resultFetch[0]};
         successHandler(res, 201, "User Created Successfully", data);
 
     } catch (error) {
@@ -83,9 +83,9 @@ const signup = async (req, res, next) => {
         }
         next(error);
     }
-}
+};
 
 module.exports = {
     login,
     signup
-}
+};

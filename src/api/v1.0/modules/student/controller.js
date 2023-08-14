@@ -10,7 +10,7 @@ let getAllStudents = async (req, res, next) => {
         let result = await queryHandler(sqlQuery);
         totalData = result.length;
         
-        const sqlQueryFetch = 'SELECT * FROM students LIMIT ? OFFSET ?';
+        const sqlQueryFetch = "SELECT * FROM students LIMIT ? OFFSET ?";
         result = await queryHandler(sqlQueryFetch, [perPage, (currentPage-1)*perPage]);
 
         let totalPages = Math.ceil(totalData/perPage);
@@ -29,7 +29,7 @@ let getStudentById = async (req, res, next) => {
     try {
         const id = req.params.id;
         const sqlQuery = "SELECT * FROM students WHERE student_id = ?";
-        result = await queryHandler(sqlQuery, [id]);
+        let result = await queryHandler(sqlQuery, [id]);
 
         if (result.length === 0) {
             let err = new Error("Student data not found");
@@ -54,7 +54,7 @@ let addStudent = async (req, res, next) => {
         let userId = req.userId;
         values = {...values, creator: userId};
         const sqlQuery = "INSERT INTO students SET ?";
-        result = await queryHandler(sqlQuery, values);
+        let result = await queryHandler(sqlQuery, values);
 
         const sqlQueryFetch = "SELECT * FROM students WHERE student_id = ?";
         let resultFetch = await queryHandler(sqlQueryFetch, [result.insertId]);
@@ -118,7 +118,7 @@ let deleteStudentById = async (req, res, next) => {
         let id = req.params.id;
         
         let sqlQueryFetch = "SELECT * FROM students WHERE student_id = ?";
-        resultFetch = await queryHandler(sqlQueryFetch, [id]);
+        let resultFetch = await queryHandler(sqlQueryFetch, [id]);
 
         if (resultFetch[0].length === 0) {
             let err = new Error("Student data not found");
@@ -135,7 +135,7 @@ let deleteStudentById = async (req, res, next) => {
         }
 
         const sqlQuery = "DELETE FROM students WHERE student_id = ?";
-        result = await queryHandler(sqlQuery, [id]);
+        let result = await queryHandler(sqlQuery, [id]);
 
         let data = {records:result[0]};
         successHandler(res, 204, "Student data deleted successfully", data);

@@ -1,10 +1,10 @@
-const express = require('express');
+const express = require("express");
 const {Router} = express;
 const router = new Router();
 
-const authController = require('./controller');
-const schema = require('./schema');
-const validateSchema = require('../../../../middlewares/validation.middleware');
+const authController = require("./controller");
+const schema = require("./schema");
+const validateSchema = require("../../../../middlewares/validation.middleware");
 
 router.route("/login").post(validateSchema(schema.loginSchema), authController.login);
 

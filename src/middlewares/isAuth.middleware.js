@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 
 exports.isAuth = async (req, res, next) => {
     try {
@@ -9,9 +9,9 @@ exports.isAuth = async (req, res, next) => {
             err.data = [];
             throw err;
         }
-        const token = authHeader.split(' ')[1]
+        const token = authHeader.split(" ")[1];
         // console.log(token)
-        let decoded = await jwt.verify(token, 'mySuperSecretKey');
+        let decoded = await jwt.verify(token, "mySuperSecretKey");
         // console.log(decoded)
 
         if (!decoded) {
@@ -30,4 +30,4 @@ exports.isAuth = async (req, res, next) => {
         next(error);
     }
     next();
-}
+};

@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 const signupSchema = Joi.object().keys({
     name: Joi.string()
@@ -11,12 +11,12 @@ const signupSchema = Joi.object().keys({
         .lowercase()
         .required(),
     password: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+        .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
         .min(6)
         .trim()
         .required(),
     confirm_password: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+        .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
         .min(6)
         .trim()
         .required(),
@@ -30,7 +30,7 @@ const loginSchema = Joi.object().keys({
         .lowercase()
         .required(),
     password: Joi.string()
-        .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+        .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
         .min(6)
         .trim()
         .required()

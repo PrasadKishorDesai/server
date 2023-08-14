@@ -43,3 +43,13 @@ make app-up
 make app-down
 ```
 
+# to check eslint errors
+```
+npm run lint
+```
+
+# to fix eslint errors
+```
+npm run lint:fix
+```
+

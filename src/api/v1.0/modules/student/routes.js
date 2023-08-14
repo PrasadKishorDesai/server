@@ -1,11 +1,11 @@
-const express = require('express');
+const express = require("express");
 const {Router} = express;
 const router = new Router();
 
-const { isAuth } = require('../../../../middlewares/isAuth.middleware');
-const api = require('./controller');
-const schema = require('./schema');
-const validateSchema = require('../../../../middlewares/validation.middleware');
+const { isAuth } = require("../../../../middlewares/isAuth.middleware");
+const api = require("./controller");
+const schema = require("./schema");
+const validateSchema = require("../../../../middlewares/validation.middleware");
 
 router.route("/students").get(isAuth, api.getAllStudents);
 

@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 const schema = Joi.object({
     first_name: Joi.string()
@@ -10,7 +10,7 @@ const schema = Joi.object({
         .trim()
         .required(),
     date_of_birth: Joi.date()
-        .max('now')
+        .max("now")
         .required(),
     blood_group: Joi.string()
         .min(2)
@@ -31,6 +31,6 @@ const schema = Joi.object({
         .min(1)
         .trim()
         .required()
-})
+});
 
 module.exports = schema;

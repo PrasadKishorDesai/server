@@ -1,4 +1,4 @@
-const { logger } = require('../helpers/logger');
+const { logger } = require("../helpers/logger");
 
 const validateSchema = (schema) => {
     return async (req, res, next) => {
@@ -19,7 +19,7 @@ const validateSchema = (schema) => {
             next(error);
         }
         next();
-    }
+    };
 };
 
 module.exports = validateSchema;
