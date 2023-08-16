@@ -7,7 +7,7 @@ class AuthenticationError extends Error {
         this.name = "AuthenticationError";
         this.httpCode = httpCode;
     }
-};
+}
 
 exports.isAuth = async (req, res, next) => {
     try {

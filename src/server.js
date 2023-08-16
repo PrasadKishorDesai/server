@@ -5,7 +5,7 @@ require("dotenv").config();
 const app = express();
 const studentRoutes = require("./api/v1.0/modules/student/routes");
 const authRoutes = require("./api/v1.0/modules/admin/routes");
-const { successHandler } = require("../helpers/successHandler");
+const { successHandler } = require("./utils/successHandler");
 const { logger, pinoHttpLogger } = require("./helpers/logger");
 const errorMiddleware = require("./middlewares/error.middleware");
 
@@ -34,21 +34,21 @@ app.use((error, req, res, next) => {
     next();
 });
 
-// process.on("uncaughtException", (err) => {
-//     logger.fatal(err, "uncaught exception detected");
-// });
+process.on("uncaughtException", (err) => {
+    logger.fatal(err, "uncaught exception detected");
+});
 
-// process.on("SIGTERM", () => {
-//     console.log(`Process ${process.pid} received a SIGTERM signal`);
-//     process.exit(0);
-// });
-    
-// process.on("SIGINT", () => {
-//     console.log(`Process ${process.pid} has been interrupted`);
-//     process.exit(0);
-// });
-        
-// process.on("unhandledRejection", (err, promise) => {
-//     console.log("Unhandled rejection at ", promise, `reason: ${err.message}`);
-//     process.exit(1);
-// });
+process.on("SIGTERM", () => {
+    console.log(`Process ${process.pid} received a SIGTERM signal`);
+    process.exit(0);
+});
+
+process.on("SIGINT", () => {
+    console.log(`Process ${process.pid} has been interrupted`);
+    process.exit(0);
+});
+
+process.on("unhandledRejection", (err, promise) => {
+    console.log("Unhandled rejection at ", promise, `reason: ${err.message}`);
+    process.exit(1);
+});

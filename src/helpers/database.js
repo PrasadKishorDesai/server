@@ -8,7 +8,7 @@ class DatabaseConnectionError extends Error {
         this.name = "DatabaseConnectionError";
         this.httpCode = httpCode;
     }
-};
+}
 
 var connection = mysql.createConnection({
     host: process.env.MYSQLDB_HOST,
@@ -33,10 +33,10 @@ const connectToDatabase = () => {
             }
 
         } catch (error) {
-
+            throw new DatabaseConnectionError(HttpStatusCode.INTERNAL_SERVER_ERROR, "Cannot connect to datbase");
         }
     });
-}
+};
 
 try {
     connectToDatabase();

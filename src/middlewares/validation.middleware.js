@@ -7,7 +7,7 @@ class SchemaValidationError extends Error {
         this.name = "SchemaValidationError";
         this.httpCode = httpCode;
     }
-};
+}
 
 const validateSchema = (schema) => {
     return async (req, res, next) => {
@@ -15,7 +15,7 @@ const validateSchema = (schema) => {
             const result = schema.validate(req.body);
             if (result.error) {
                 logger.debug(result.error);
-                logger.error(err, "validation failed");
+                logger.error(result.error, "validation failed");
                 throw new SchemaValidationError(HttpStatusCode.BAD_INPUT, "Validation failed");
             }
         } catch (error) {

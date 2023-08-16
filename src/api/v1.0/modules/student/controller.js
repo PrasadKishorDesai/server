@@ -1,5 +1,5 @@
-const { queryHandler } = require("../../../../../helpers/queryHandler");
-const { successHandler } = require("../../../../../helpers/successHandler");
+const { queryHandler } = require("../../../../utils/queryHandler");
+const { successHandler } = require("../../../../utils/successHandler");
 const HttpStatusCode = require("../../../../constants/httpStatusCode");
 const StudentApiError = require("./error");
 

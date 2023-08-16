@@ -3,9 +3,7 @@ class AdminApiError extends Error {
         super(message);
         this.name = "AdminApiError";
         this.httpCode = httpCode;
-
-        // Error.captureStackTrace(this);
     }
-};
+}
 
 module.exports = AdminApiError;

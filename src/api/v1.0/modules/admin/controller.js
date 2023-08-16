@@ -1,7 +1,9 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { successHandler } = require("../../../../../helpers/successHandler");
-const { queryHandler } = require("../../../../../helpers/queryHandler");
+const { successHandler } = require("../../../../utils/successHandler");
+const { queryHandler } = require("../../../../utils/queryHandler");
+const AdminApiError = require("./error");
+const HttpStatusCode = require("../../../../constants/httpStatusCode");
 
 const login = async (req, res, next) => {
     try {
@@ -12,19 +14,13 @@ const login = async (req, res, next) => {
         let resultCheck = await queryHandler(sqlQueryCheck, [email]);
 
         if (resultCheck.length === 0) {
-            let err = new Error("Email does not exists");
-            err.statusCode = 404;
-            err.data = resultCheck;
-            throw err;
+            throw new AdminApiError(HttpStatusCode.NOT_FOUND, "Email does not exists");
         }
 
         const isEqual = await bcrypt.compare(password, resultCheck[0].password);
 
         if (!isEqual) {
-            let err = new Error("Password did not match");
-            err.statusCode = 400;
-            err.data = [];
-            throw err;
+            throw new AdminApiError(HttpStatusCode.BAD_INPUT, "Password did not match");
         }
 
         let data = resultCheck[0];
@@ -39,12 +35,9 @@ const login = async (req, res, next) => {
         );
         
         data = {records:resultCheck[0], token};
-        successHandler(res, 200, "User Verified Successfully", data);
+        successHandler(res, HttpStatusCode.OK, "User Verified Successfully", data);
 
     } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
         next(error);
     }
 };
@@ -59,10 +52,7 @@ const signup = async (req, res, next) => {
         let resultCheck = await queryHandler(sqlQueryCheck, [email]);
 
         if (resultCheck.length !== 0) {
-            let err = new Error("Email already exists");
-            err.statusCode = 400;
-            err.data = resultCheck;
-            throw err;
+            throw new AdminApiError(HttpStatusCode.BAD_INPUT, "Email already exists");
         }
 
         let hashPwd = await bcrypt.hash(password, 7);
@@ -71,16 +61,21 @@ const signup = async (req, res, next) => {
         const values = { email, name, password: hashPwd };
         let result = await queryHandler(sqlQuery, values);
 
+        if (!result) {
+            throw new AdminApiError(HttpStatusCode.INTERNAL_SERVER_ERROR, "Internal server error occured, cannot sign up");
+        }
+
         const sqlQueryFetch = "SELECT * FROM admin WHERE user_id = ?";
         let resultFetch = await queryHandler(sqlQueryFetch, [result.insertId]);
         
+        if (resultFetch[0].length === 0) {
+            throw new AdminApiError(HttpStatusCode.INTERNAL_SERVER_ERROR, "Internal server error");
+        }
+        
         let data = {records:resultFetch[0]};
-        successHandler(res, 201, "User Created Successfully", data);
+        successHandler(res, HttpStatusCode.CREATED, "User Created Successfully", data);
 
     } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
         next(error);
     }
 };

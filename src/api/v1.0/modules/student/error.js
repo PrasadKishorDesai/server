@@ -4,6 +4,6 @@ class StudentApiError extends Error {
         this.name = "StudentApiError";
         this.httpCode = httpCode;
     }
-};
+}
 
 module.exports = StudentApiError;

@@ -9,7 +9,7 @@ const errorMiddleware = (error, req, res) => {
     res.status(status).send({
         success: false,
         message: message
-    })
+    });
 };
 
 module.exports = errorMiddleware;
