@@ -1,4 +1,13 @@
+const HttpStatusCode = require("../constants/httpStatusCode");
 const { logger } = require("../helpers/logger");
+
+class SchemaValidationError extends Error {
+    constructor (httpCode, message) {
+        super(message);
+        this.name = "SchemaValidationError";
+        this.httpCode = httpCode;
+    }
+};
 
 const validateSchema = (schema) => {
     return async (req, res, next) => {
@@ -7,15 +16,9 @@ const validateSchema = (schema) => {
             if (result.error) {
                 logger.debug(result.error);
                 logger.error(err, "validation failed");
-                var err = await new Error("validation failed");
-                err.statusCode = 400;
-                err.data = [];
-                throw err;
+                throw new SchemaValidationError(HttpStatusCode.BAD_INPUT, "Validation failed");
             }
         } catch (error) {
-            if (!error.statusCode) {
-                error.statusCode = 500;
-            }
             next(error);
         }
         next();

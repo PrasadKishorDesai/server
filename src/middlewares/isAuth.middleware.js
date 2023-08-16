@@ -1,32 +1,30 @@
 const jwt = require("jsonwebtoken");
+const HttpStatusCode = require("../constants/httpStatusCode");
+
+class AuthenticationError extends Error {
+    constructor (httpCode, message) {
+        super(message);
+        this.name = "AuthenticationError";
+        this.httpCode = httpCode;
+    }
+};
 
 exports.isAuth = async (req, res, next) => {
     try {
         const authHeader = req.get("Authorization");
         if (!authHeader) {
-            let err = new Error("Not authenticated");
-            err.statusCode = 401;
-            err.data = [];
-            throw err;
+            throw new AuthenticationError(HttpStatusCode.NOT_AUTHORIZED, "Not authenticated");
         }
         const token = authHeader.split(" ")[1];
-        // console.log(token)
         let decoded = await jwt.verify(token, "mySuperSecretKey");
-        // console.log(decoded)
 
         if (!decoded) {
-            let err = new Error("Invalid token");
-            err.statusCode = 401;
-            err.data = [];
-            throw err;
+            throw new AuthenticationError(HttpStatusCode.NOT_AUTHORIZED, "Invalid token");
         }
 
         req.userId = decoded.user_id;
 
     } catch (error) {
-        if (!error.statusCode) {
-            error.statusCode = 500;
-        }
         next(error);
     }
     next();
