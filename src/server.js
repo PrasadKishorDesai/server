@@ -1,13 +1,14 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
+import express from "express";
+import cors from "cors";
+import "dotenv/config";
+
+import studentRoutes from "./api/v1.0/modules/student/routes.js";
+import authRoutes from "./api/v1.0/modules/admin/routes.js";
+import { successHandler } from "./utils/successHandler.js";
+import { logger, pinoHttpLogger } from "./helpers/logger.js";
+import {errorMiddleware} from "./middlewares/error.middleware.js";
 
 const app = express();
-const studentRoutes = require("./api/v1.0/modules/student/routes");
-const authRoutes = require("./api/v1.0/modules/admin/routes");
-const { successHandler } = require("./utils/successHandler");
-const { logger, pinoHttpLogger } = require("./helpers/logger");
-const errorMiddleware = require("./middlewares/error.middleware");
 
 app.use(cors());
 app.use(express.json());

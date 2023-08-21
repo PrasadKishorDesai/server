@@ -1,6 +1,6 @@
-const Joi = require("joi");
+import Joi from "joi";
 
-const signupSchema = Joi.object().keys({
+export const signupSchema = Joi.object().keys({
     name: Joi.string()
         .min(3)
         .trim()
@@ -23,7 +23,7 @@ const signupSchema = Joi.object().keys({
     
 });
 
-const loginSchema = Joi.object().keys({
+export const loginSchema = Joi.object().keys({
     email: Joi.string()
         .email()
         .trim()
@@ -35,8 +35,3 @@ const loginSchema = Joi.object().keys({
         .trim()
         .required()
 });
-
-module.exports = {
-    signupSchema,
-    loginSchema
-};

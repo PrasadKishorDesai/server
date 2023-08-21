@@ -1,6 +1,6 @@
-var mysql = require("mysql2");
-const HttpStatusCode = require("../constants/httpStatusCode");
-const logger = require("./logger").logger;
+import mysql from "mysql2";
+import { HttpStatusCode } from "../constants/httpStatusCode.js";
+import { logger } from "./logger.js";
 
 class DatabaseConnectionError extends Error {
     constructor(httpCode, message) {
@@ -20,28 +20,19 @@ var connection = mysql.createConnection({
     port: process.env.MYSQLDB_LOCAL_PORT
 });
 
-const connectToDatabase = () => {
-    connection.connect((err) => {
-        try {
-            if (err) {
-                logger.error(err, "Error connecting to database or the connection may be closed");
-                throw new DatabaseConnectionError(HttpStatusCode.INTERNAL_SERVER_ERROR, "Cannot connect to datbase");
-            }
-            else {
-                console.log("Successfully connected to database");
-                logger.info("Successfully connected to database");
-            }
-
-        } catch (error) {
+connection.connect((err) => {
+    try {
+        if (err) {
             throw new DatabaseConnectionError(HttpStatusCode.INTERNAL_SERVER_ERROR, "Cannot connect to datbase");
         }
-    });
-};
+        else {
+            console.log("Successfully connected to database");
+            logger.info("Successfully connected to database");
+        }
 
-try {
-    connectToDatabase();
-} catch (error) {
-    throw new DatabaseConnectionError(HttpStatusCode.INTERNAL_SERVER_ERROR, "Cannot connect to datbase");
-}
+    } catch (error) {
+        logger.error(err, "Error connecting to database or the connection may be closed");
+    }
+});
 
-module.exports = connection;
+export { connection };

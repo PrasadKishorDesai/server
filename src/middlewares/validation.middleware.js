@@ -1,5 +1,5 @@
-const HttpStatusCode = require("../constants/httpStatusCode");
-const { logger } = require("../helpers/logger");
+import { HttpStatusCode } from "../constants/httpStatusCode.js";
+import { logger } from "../helpers/logger.js";
 
 class SchemaValidationError extends Error {
     constructor (httpCode, message) {
@@ -9,7 +9,7 @@ class SchemaValidationError extends Error {
     }
 }
 
-const validateSchema = (schema) => {
+export const validateSchema = (schema) => {
     return async (req, res, next) => {
         try {
             const result = schema.validate(req.body);
@@ -24,5 +24,3 @@ const validateSchema = (schema) => {
         next();
     };
 };
-
-module.exports = validateSchema;

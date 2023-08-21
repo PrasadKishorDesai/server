@@ -1,7 +1,7 @@
-const HttpStatusCode = require("../constants/httpStatusCode");
-const { logger } = require("../helpers/logger");
+import { HttpStatusCode } from "../constants/httpStatusCode.js";
+import { logger } from "../helpers/logger.js";
 
-const errorMiddleware = (error, req, res) => {
+export const errorMiddleware = (error, req, res) => {
     const status = error.httpCode || HttpStatusCode.INTERNAL_SERVER_ERROR;
     const message = error.message || "Internal Server Error";
     logger.error(error, "Something went wrong!!");
@@ -11,5 +11,3 @@ const errorMiddleware = (error, req, res) => {
         message: message
     });
 };
-
-module.exports = errorMiddleware;

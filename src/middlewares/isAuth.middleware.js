@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
-const HttpStatusCode = require("../constants/httpStatusCode");
+import jwt from "jsonwebtoken";
+import { HttpStatusCode } from "../constants/httpStatusCode.js";
 
 class AuthenticationError extends Error {
     constructor (httpCode, message) {
@@ -9,7 +9,7 @@ class AuthenticationError extends Error {
     }
 }
 
-exports.isAuth = async (req, res, next) => {
+export const isAuth = async (req, res, next) => {
     try {
         const authHeader = req.get("Authorization");
         if (!authHeader) {

@@ -1,11 +1,11 @@
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { successHandler } = require("../../../../utils/successHandler");
-const { queryHandler } = require("../../../../utils/queryHandler");
-const AdminApiError = require("./error");
-const HttpStatusCode = require("../../../../constants/httpStatusCode");
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { AdminApiError } from "./error.js";
+import { HttpStatusCode } from "../../../../constants/httpStatusCode.js";
+import { successHandler } from "../../../../utils/successHandler.js";
+import { queryHandler } from "../../../../utils/queryHandler.js";
 
-const login = async (req, res, next) => {
+export const login = async (req, res, next) => {
     try {
         let email = req.body.email;
         let password = req.body.password;
@@ -33,8 +33,8 @@ const login = async (req, res, next) => {
             "mySuperSecretKey",
             { expiresIn: "1h" }
         );
-        
-        data = {records:resultCheck[0], token};
+
+        data = { records: resultCheck[0], token };
         successHandler(res, HttpStatusCode.OK, "User Verified Successfully", data);
 
     } catch (error) {
@@ -42,7 +42,7 @@ const login = async (req, res, next) => {
     }
 };
 
-const signup = async (req, res, next) => {
+export const signup = async (req, res, next) => {
     try {
         let name = req.body.name;
         let email = req.body.email;
@@ -67,20 +67,15 @@ const signup = async (req, res, next) => {
 
         const sqlQueryFetch = "SELECT * FROM admin WHERE user_id = ?";
         let resultFetch = await queryHandler(sqlQueryFetch, [result.insertId]);
-        
+
         if (resultFetch[0].length === 0) {
             throw new AdminApiError(HttpStatusCode.INTERNAL_SERVER_ERROR, "Internal server error");
         }
-        
-        let data = {records:resultFetch[0]};
+
+        let data = { records: resultFetch[0] };
         successHandler(res, HttpStatusCode.CREATED, "User Created Successfully", data);
 
     } catch (error) {
         next(error);
     }
-};
-
-module.exports = {
-    login,
-    signup
 };

@@ -1,8 +1,8 @@
-const db = require("../helpers/database");
-const util = require("util");
+import { connection as db } from "../helpers/database.js";
+import util from "util";
 const query = util.promisify(db.query).bind(db);
 
-exports.queryHandler = async (sqlQuery, values=[]) => {
+export const queryHandler = async (sqlQuery, values = []) => {
     let result = await query(sqlQuery, values);
     return result;
 };

@@ -11,13 +11,15 @@ services:
       MYSQL_PASSWORD: ${MYSQLDB_PASSWORD}
     ports:
       - '${MYSQLDB_LOCAL_PORT}:${MYSQLDB_DOCKER_PORT}'
+    networks:
+      - node_network
     volumes:
       - ./.docker/mysql:/var/lib/mysql
 
   node-api:
     build:
       context: .
-      dockerfile: Dockfile
+      dockerfile: Dockerfile
     command: npm run dev
     container_name: node-api
     restart: always
@@ -35,3 +37,6 @@ services:
       - node_network
     volumes:
       - ./:/app
+networks:
+  node_network:
+    driver: bridge

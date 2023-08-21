@@ -1,6 +1,6 @@
-const Joi = require("joi");
+import Joi from "joi";
 
-const schema = Joi.object({
+export const schema = Joi.object({
     first_name: Joi.string()
         .min(3)
         .trim()
@@ -32,5 +32,3 @@ const schema = Joi.object({
         .trim()
         .required()
 });
-
-module.exports = schema;

@@ -1,8 +1,8 @@
-const pino = require("pino");
-const pinoHttp = require("pino-http");
-const fs = require("fs");
-const path = require("path");
-const rootPath = require("./rootPath");
+import { pino } from "pino";
+import { pinoHttp } from "pino-http";
+import fs from "fs";
+import path from "path";
+import { getAppRootDir as rootPath } from "./rootPath.js";
 
 const levels = {
     fatal: 60,
@@ -15,7 +15,7 @@ const levels = {
 
 const projRootPath = rootPath();
 const loggerPath = path.join(projRootPath, "logs");
-const todayDate = new Date().toJSON().slice(0,10);
+const todayDate = new Date().toJSON().slice(0, 10);
 
 fs.mkdir(loggerPath, { recursive: true }, (err) => {
     if (err) {
@@ -28,7 +28,7 @@ const fileTransport = pino.transport({
     options: { destination: `${loggerPath}/${todayDate}.log` },
 });
 
-const logger = pino({
+export const logger = pino({
     level: "trace",
     timestamp: () => `,"time":"${new Date(new Date(Date.now()).toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))}"`,
     base: undefined,
@@ -41,7 +41,7 @@ const logger = pino({
     },
 }, fileTransport);
 
-const pinoHttpLogger = pinoHttp({
+export const pinoHttpLogger = pinoHttp({
     logger: logger,
     serializers: {
         err: pino.stdSerializers.err,
@@ -58,7 +58,3 @@ const pinoHttpLogger = pinoHttp({
 
 }, fileTransport);
 
-module.exports = {
-    logger,
-    pinoHttpLogger
-};

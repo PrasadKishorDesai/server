@@ -1,6 +1,6 @@
-const HttpStatusCode = require("../constants/httpStatusCode");
+import { HttpStatusCode } from "../constants/httpStatusCode.js";
 
-exports.successHandler = (res, statusCode=HttpStatusCode.OK, message="success", data=[]) => {
+export const successHandler = (res, statusCode = HttpStatusCode.OK, message = "success", data = []) => {
     res.setHeader("Content-type", "application/json");
     res.status(statusCode).send({
         success: true,
