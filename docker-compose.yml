@@ -1,42 +1,42 @@
 version: '3.8'
 services:
-  db:
+  my-sql:
     image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
     restart: always
-    container_name: db
+    container_name: my-sql
     environment:
-      MYSQL_DATABASE: ${DATABASE}
-      MYSQL_USER: ${USER}
-      MYSQL_PASSWORD: ${PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQLDB_DATABASE}
+      MYSQL_USER: ${MYSQLDB_USER}
+      MYSQL_PASSWORD: ${MYSQLDB_PASSWORD}
     ports:
-      - '3307:3306'
-    expose:
-      - '3306'
+      - '${MYSQLDB_LOCAL_PORT}:${MYSQLDB_DOCKER_PORT}'
+    networks:
+      - node_network
     volumes:
       - ./.docker/mysql:/var/lib/mysql
 
-  api:
-    depends_on:
-      - db
-    build: .
-    container_name: api
+  node-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm run dev
+    container_name: node-api
+    restart: always
     ports:
-      - 8080:8000
+      - ${NODE_LOCAL_PORT}:${NODE_DOCKER_PORT}
+    depends_on:
+      - my-sql
     environment:
-      - DB_HOST=db
-      - DB_USER=${USER}
-      - DB_PASSWORD=${PASSWORD}
-      - DB_NAME=${DATABASE}
-      - DB_PORT=3306
-    stdin_open: true
-    tty: true
+      - DB_HOST=${MYSQLDB_HOST}
+      - DB_USER=${MYSQLDB_USER}
+      - DB_PASSWORD=${MYSQLDB_PASSWORD}
+      - DB_NAME=${MYSQLDB_DATABASE}
+      - DB_PORT=${MYSQLDB_DOCKER_PORT}
     networks:
       - node_network
-
-volumes:
-  my-db:
-
+    volumes:
+      - ./:/app
 networks:
   node_network:
     driver: bridge

@@ -1,0 +1,5 @@
+version: '3.8'
+
+networks:
+  node_network:
+    driver: bridge

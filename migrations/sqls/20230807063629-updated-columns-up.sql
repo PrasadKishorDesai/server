@@ -1,7 +1,10 @@
-LOCK TABLES admin WRITE;
-DROP TABLE IF EXISTS admin;
-UNLOCK TABLES;
+-- modifying blood_group column to enum datatype 
 
-LOCK TABLES students WRITE;
-DROP TABLE IF EXISTS students;
-UNLOCK TABLES;
+ALTER TABLE students
+MODIFY COLUMN blood_group ENUM('A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-') NOT NULL;
+
+-- adding country_code column
+
+ALTER TABLE students
+ADD country_code varchar(5) NOT NULL;
+
