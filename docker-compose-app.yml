@@ -4,7 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: npm run dev
     container_name: node-api
     restart: always
     ports:
