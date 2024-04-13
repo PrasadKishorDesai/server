@@ -17,26 +17,27 @@ services:
     volumes:
       - ./.docker/mysql:/var/lib/mysql
 
-  node-api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: node-api
-    restart: always
-    ports:
-      - ${NODE_LOCAL_PORT}:${NODE_DOCKER_PORT}
-    depends_on:
-      - my-sql
-    environment:
-      - DB_HOST=${MYSQLDB_HOST}
-      - DB_USER=${MYSQLDB_USER}
-      - DB_PASSWORD=${MYSQLDB_PASSWORD}
-      - DB_NAME=${MYSQLDB_DATABASE}
-      - DB_PORT=${MYSQLDB_DOCKER_PORT}
-    networks:
-      - node_network
-    volumes:
-      - ./:/app
+  # node-api:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   container_name: node-api
+  #   restart: always
+  #   ports:
+  #     - ${NODE_LOCAL_PORT}:${NODE_DOCKER_PORT}
+  #   depends_on:
+  #     - my-sql
+  #   environment:
+  #     - DB_HOST=${MYSQLDB_HOST}
+  #     - DB_USER=${MYSQLDB_USER}
+  #     - DB_PASSWORD=${MYSQLDB_PASSWORD}
+  #     - DB_NAME=${MYSQLDB_DATABASE}
+  #     - DB_PORT=${MYSQLDB_DOCKER_PORT}
+  #   networks:
+  #     - node_network
+  #   volumes:
+  #     - ./:/app
+
 networks:
   node_network:
     driver: bridge

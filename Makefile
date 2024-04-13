@@ -6,8 +6,11 @@ d-down: docker-compose-down
 all-up: dependency-up application-up
 all-down: dependency-down application-down
 
-up: dependency-up
-down: dependency-down
+up: docker-compose-up
+down: docker-compose-down
+
+deps-up: dependency-up
+deps-down: dependency-down
 
 app-up: application-up
 app-down: application-down
